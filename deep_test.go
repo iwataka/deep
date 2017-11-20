@@ -749,4 +749,28 @@ func TestNil(t *testing.T) {
 	if diff != nil {
 		t.Error("Nil value to comparision should not be equal")
 	}
+
+	var nilMap map[string]int
+	IgnoreDifferenceBetweenEmptyMapAndNil = true
+	diff = Equal(nilMap, map[string]int{})
+	if diff != nil {
+		t.Errorf("Nil map should be equal to empty map when IgnoreDifferenceBetweenEmptyMapAndNil is %v", IgnoreDifferenceBetweenEmptyMapAndNil)
+	}
+	diff = Equal(map[string]int{}, nilMap)
+	if diff != nil {
+		t.Errorf("Nil map should be equal to empty map when IgnoreDifferenceBetweenEmptyMapAndNil is %v", IgnoreDifferenceBetweenEmptyMapAndNil)
+	}
+	IgnoreDifferenceBetweenEmptyMapAndNil = false
+
+	var nilSlice []int
+	IgnoreDifferenceBetweenEmptySliceAndNil = true
+	diff = Equal(nilSlice, []int{})
+	if diff != nil {
+		t.Errorf("Nil slice should be equal to empty slice when IgnoreDifferenceBetweenEmptySliceAndNil is %v", IgnoreDifferenceBetweenEmptySliceAndNil)
+	}
+	diff = Equal([]int{}, nilSlice)
+	if diff != nil {
+		t.Errorf("Nil slice should be equal to empty slice when IgnoreDifferenceBetweenEmptySliceAndNil is %v", IgnoreDifferenceBetweenEmptySliceAndNil)
+	}
+	IgnoreDifferenceBetweenEmptySliceAndNil = false
 }

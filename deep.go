@@ -28,6 +28,12 @@ var (
 	// CompareUnexportedFields causes unexported struct fields, like s in
 	// T{s int}, to be comparsed when true.
 	CompareUnexportedFields = false
+
+	// IgnoreDifferenceBetweenEmptyMapAndNil means an empty map is same as nil when true.
+	IgnoreDifferenceBetweenEmptyMapAndNil = false
+
+	// IgnoreDifferenceBetweenEmptySliceAndNil means an empty slice is same as nil when true.
+	IgnoreDifferenceBetweenEmptySliceAndNil = false
 )
 
 var (
@@ -206,8 +212,14 @@ func (c *cmp) equals(a, b reflect.Value, level int) {
 
 		if a.IsNil() || b.IsNil() {
 			if a.IsNil() && !b.IsNil() {
+				if IgnoreDifferenceBetweenEmptyMapAndNil && b.Len() == 0 {
+					return
+				}
 				c.saveDiff("<nil map>", b)
 			} else if !a.IsNil() && b.IsNil() {
+				if IgnoreDifferenceBetweenEmptyMapAndNil && a.Len() == 0 {
+					return
+				}
 				c.saveDiff(a, "<nil map>")
 			}
 			return
@@ -250,8 +262,14 @@ func (c *cmp) equals(a, b reflect.Value, level int) {
 	case reflect.Slice:
 		if a.IsNil() || b.IsNil() {
 			if a.IsNil() && !b.IsNil() {
+				if IgnoreDifferenceBetweenEmptySliceAndNil && b.Len() == 0 {
+					return
+				}
 				c.saveDiff("<nil slice>", b)
 			} else if !a.IsNil() && b.IsNil() {
+				if IgnoreDifferenceBetweenEmptySliceAndNil && a.Len() == 0 {
+					return
+				}
 				c.saveDiff(a, "<nil slice>")
 			}
 			return
